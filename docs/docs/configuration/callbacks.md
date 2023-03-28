@@ -110,14 +110,14 @@ in) or updated (i.e whenever a session is accessed in the client). The returned 
 Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`, `getServerSession()`, `useSession()` will invoke this function, but only if you are using a [JWT session](/configuration/options#session). This method is not invoked when you persist sessions in a database.
 
 - As with database persisted session expiry times, token expiry time is extended whenever a session is active.
-- The arguments _user_, _account_, _profile_ and _isNewUser_ are only passed the first time this callback is called on a new session, after the user signs in. In subsequent calls, only `token` will be available.
+- The arguments _user_, _account_, _profile_ and _isNewUser_ are only passed the first time this callback is called on a new session, after the user signs in. In subsequent calls, only _token_ will be available.
 
 The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and if you are using a database. You can persist data such as User ID, OAuth Access Token in this token, see the example below for `access_token` and `user.id`. To expose it on the client side, check out the [`session()` callback](#session-callback) as well.
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
 callbacks: {
-  async jwt({ token, account, profile }) {
+  async jwt({ token, user, account, profile, isNewUser }) {
     // Persist the OAuth access_token and or the user id to the token right after signin
     if (account) {
       token.accessToken = account.access_token
